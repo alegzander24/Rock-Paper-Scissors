@@ -1,3 +1,10 @@
+const container = document.querySelector(".container");
+const btnRock = document.querySelector(".rock");
+const btnPaper = document.querySelector(".paper");
+const btnScissors = document.querySelector(".scissors");
+const scoreText = document.querySelector(".score");
+const resultText = document.querySelector(".result");
+
 function getComputerChoice() {
 	let choice = Math.floor(Math.random() * 3);
 	if (choice === 0) {
@@ -29,22 +36,43 @@ function playRound(humanChoice, computerChoice) {
 
 let humanScore = 0;
 let computerScore = 0;
-function playGame() {
-	let result = playRound(getHumanChoice(), getComputerChoice());
+
+function updateScore(result) {
 	if (result === true) {
-		console.log("YOU WIN");
 		++humanScore;
 	} else if (result === false) {
-		console.log("YOU LOOSE");
 		++computerScore;
 	} else {
 		console.log("it's a tie !");
 	}
-
-	console.log(`your score : ${humanScore}`);
-	console.log(`computer score : ${computerScore}`);
 }
 
-while (humanScore <= 4 && computerScore <= 4) {
-	playGame();
+function updateResultText(result) {
+	if (result === true) {
+		resultText.textContent = "YOU WIN";
+	} else if (result === false) {
+		resultText.textContent = "YOU LOOSE";
+	} else {
+		resultText.textContent = "it's a tie !";
+	}
 }
+
+function isGameOver(pScore, cScore) {
+	if (pScore === 10 || cScore === 10) {
+		return true;
+	}
+	return false;
+}
+
+container.addEventListener("click", (e) => {
+	let playerChoice = e.target.className;
+	let result = playRound(playerChoice, getComputerChoice());
+
+	if (isGameOver(humanScore, computerScore)) {
+		resultText.textContent = "Game Over";
+	} else {
+		updateScore(result);
+		updateResultText(result);
+	}
+	scoreText.textContent = `Your score : ${humanScore} \n Computer score : ${computerScore}`;
+});
